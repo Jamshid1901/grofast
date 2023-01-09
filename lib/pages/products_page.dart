@@ -14,6 +14,7 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPageState extends State<ProductPage> {
   List<ProductModel?>? lifOfProduct = [];
+  List listOfCategory = [];
   bool isLoading = true;
   bool isHorizontal = true;
 
@@ -26,6 +27,7 @@ class _ProductPageState extends State<ProductPage> {
   getInformation() async {
     isLoading = true;
     lifOfProduct = await GetInfo.getProduct();
+    listOfCategory = await GetInfo.getCategory();
     isLoading = false;
     setState(() {});
   }
@@ -48,7 +50,7 @@ class _ProductPageState extends State<ProductPage> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 16, horizontal: 24),
                         shrinkWrap: true,
-                        itemCount: 10,
+                        itemCount: listOfCategory.length ?? 0,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           return Container(
@@ -57,7 +59,8 @@ class _ProductPageState extends State<ProductPage> {
                                   borderRadius: BorderRadius.circular(16),
                                   color: Style.bgCategory),
                               padding: const EdgeInsets.all(8),
-                              child: Center(child: Text("category $index")));
+                              child: Center(
+                                  child: Text(listOfCategory[index] ?? "")));
                         }),
                   ),
                   Padding(
@@ -66,10 +69,12 @@ class _ProductPageState extends State<ProductPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text("All Product"),
-                        IconButton(onPressed: () {
-                          isHorizontal = !isHorizontal;
-                          setState(() {});
-                        }, icon: Icon( isHorizontal ? Icons.menu : Icons.list))
+                        IconButton(
+                            onPressed: () {
+                              isHorizontal = !isHorizontal;
+                              setState(() {});
+                            },
+                            icon: Icon(isHorizontal ? Icons.menu : Icons.list))
                       ],
                     ),
                   ),
@@ -84,15 +89,14 @@ class _ProductPageState extends State<ProductPage> {
                           },
                         )
                       : GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: lifOfProduct?.length ?? 0,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: lifOfProduct?.length ?? 0,
                           gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2),
-                          itemBuilder: (context, index) =>
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
+                          itemBuilder: (context, index) => const Padding(
+                                padding: EdgeInsets.all(8.0),
                                 child: Placeholder(),
                               )),
                 ],
