@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:grofast/pages/card_page.dart';
 import 'package:grofast/pages/persons.dart';
-import 'package:grofast/pages/products_page.dart';
+import 'package:grofast/pages/products_list_page.dart';
 import 'package:grofast/pages/profile.dart';
 import 'package:grofast/style/style.dart';
+import 'package:proste_indexed_stack/proste_indexed_stack.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -15,17 +16,20 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int selectIndex = 0;
 
-  List<Widget> list = [
-    const ProductPage(),
-    const PersonsPage(),
-    const CardPage(),
-    const ProfilePage()
+  List<IndexedStackChild> list = [
+    IndexedStackChild(child: const ProductListPage()),
+    IndexedStackChild(child: const PersonsPage()),
+    IndexedStackChild(child: const CardPage()),
+    IndexedStackChild(child: const ProfilePage())
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: list[selectIndex],
+      body: ProsteIndexedStack(
+        index: selectIndex,
+        children: list,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         selectedIconTheme: const IconThemeData(color: Style.primaryColor),
         unselectedIconTheme: const IconThemeData(color: Style.greyColor),

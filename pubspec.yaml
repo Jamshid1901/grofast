@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   cached_network_image: ^3.2.3
   http: ^0.13.5
+  proste_indexed_stack: ^0.2.4
 
 dev_dependencies:
   flutter_test:
