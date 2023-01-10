@@ -39,6 +39,7 @@ dependencies:
   cached_network_image: ^3.2.3
   http: ^0.13.5
   proste_indexed_stack: ^0.2.4
+  pull_to_refresh: ^2.0.0
 
 dev_dependencies:
   flutter_test:
