@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
     IndexedStackChild(child: const ProductListPage()),
     IndexedStackChild(child: const PersonsPage()),
     IndexedStackChild(child: const CardPage()),
-    IndexedStackChild(child: const ProfilePage())
+    IndexedStackChild(child: const ProfilePage(),preload: true)
   ];
 
   @override

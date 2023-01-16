@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:grofast/model/new_product_model.dart';
 import 'package:grofast/model/product_model.dart';
 import 'package:grofast/repository/get_info.dart';
+import 'package:grofast/store/local_store.dart';
 import 'package:grofast/style/style.dart';
 import 'package:grofast/unit/horizontal_product.dart';
 import 'package:grofast/unit/image_network.dart';
@@ -28,7 +30,7 @@ class _ProductListPageState extends State<ProductListPage> {
 
   @override
   void initState() {
-    getInformationNew();
+    getInformation();
     refreshController = RefreshController();
     super.initState();
   }
@@ -44,13 +46,12 @@ class _ProductListPageState extends State<ProductListPage> {
 
   getPageProduct(RefreshController controller) async {
     NewProductModel? newData = await GetInfo.getProductNew(++pageIndex);
-    if(newData?.data != null && newData!.data!.isNotEmpty){
+    if (newData?.data != null && newData!.data!.isNotEmpty) {
       newProductModel!.data!.addAll(newData.data!);
       controller.loadComplete();
-    }else{
+    } else {
       controller.loadNoData();
     }
-
     setState(() {});
   }
 
@@ -59,6 +60,14 @@ class _ProductListPageState extends State<ProductListPage> {
     setState(() {});
     lifOfProduct = await GetInfo.getProduct();
     listOfCategory = await GetInfo.getCategory();
+    List<String> localList = await LocalStore.getLikeList();
+    lifOfProduct?.forEach((element) {
+      if (localList.contains(element?.id.toString())) {
+        element?.like = true;
+      } else {
+        element?.like = false;
+      }
+    });
     isLoading = false;
     setState(() {});
   }
@@ -162,8 +171,35 @@ class _ProductListPageState extends State<ProductListPage> {
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: lifOfProduct?.length ?? 0,
                                 itemBuilder: (context, index) {
-                                  return HorizontalProduct(
-                                      product: lifOfProduct?[index]);
+                                  return Slidable(
+                                    key: UniqueKey(),
+                                    startActionPane: ActionPane(
+                                      motion: const ScrollMotion(),
+                                      dismissible:
+                                          DismissiblePane(onDismissed: () {
+                                        lifOfProduct!.removeAt(index);
+                                        //share
+                                      }),
+                                      children: [
+                                        SlidableAction(
+                                          onPressed: (s) {
+                                            lifOfProduct!.removeAt(index);
+                                            setState(() {});
+                                          },
+                                          backgroundColor: Color(0xFFFE4A49),
+                                          foregroundColor: Colors.white,
+                                          icon: Icons.delete,
+                                          label: 'Delete',
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ],
+                                    ),
+                                    child: HorizontalProduct(
+                                      product: lifOfProduct?[index],
+                                      onLikeInLikePage: () {},
+                                    ),
+                                  );
                                 },
                               )
                             : GridView.builder(
@@ -176,15 +212,23 @@ class _ProductListPageState extends State<ProductListPage> {
                                 itemBuilder: (context, index) => Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Container(
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: Style.black),
-                                              borderRadius:
-                                                  BorderRadius.circular(16)),
-                                          child: CustomImageNetwork(
-                                            image:
-                                                "https://api.foodyman.org/storage/images/${newProductModel?.data?[index]?.img}",
-                                          )),
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          border:
+                                              Border.all(color: Style.black),
+                                          borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.elliptical(
+                                                  MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  100),
+                                              bottomRight: Radius.elliptical(
+                                                  MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  100)),
+                                        ),
+                                      ),
                                     )),
                   ],
                 ),

@@ -40,6 +40,8 @@ dependencies:
   http: ^0.13.5
   proste_indexed_stack: ^0.2.4
   pull_to_refresh: ^2.0.0
+  flutter_slidable: ^2.0.0
+  shared_preferences: ^2.0.16
 
 dev_dependencies:
   flutter_test:

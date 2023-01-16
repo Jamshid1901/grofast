@@ -1,22 +1,27 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:grofast/model/product_model.dart';
 import 'package:grofast/pages/product_screen.dart';
+import 'package:grofast/store/local_store.dart';
 import 'package:grofast/style/style.dart';
 import 'package:grofast/unit/image_network.dart';
 
-class HorizontalProduct extends StatelessWidget {
+class HorizontalProduct extends StatefulWidget {
   final ProductModel? product;
+  final VoidCallback onLikeInLikePage;
+  const HorizontalProduct({Key? key, required this.product, required this.onLikeInLikePage}) : super(key: key);
 
-  const HorizontalProduct({Key? key, required this.product}) : super(key: key);
+  @override
+  State<HorizontalProduct> createState() => _HorizontalProductState();
+}
 
+class _HorizontalProductState extends State<HorizontalProduct> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => ProductScreen(productModel: product!),
+            builder: (_) => ProductScreen(productModel: widget.product!),
           ),
         );
       },
@@ -30,9 +35,9 @@ class HorizontalProduct extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: 10),
               child: Hero(
-                tag: product?.id ?? 0,
+                tag: widget.product?.id ?? 0,
                 child: CustomImageNetwork(
-                  image: product?.image,
+                  image: widget.product?.image,
                 ),
               ),
             ),
@@ -42,11 +47,31 @@ class HorizontalProduct extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
-                  child: Text(product?.title ?? ""),
+                  child: Text(widget.product?.title ?? ""),
                 ),
-                Text((product?.price ?? 0).toString()),
+                Text((widget.product?.price ?? 0).toString()),
               ],
             )),
+            IconButton(
+              onPressed: () {
+                if (widget.product?.like ?? false) {
+                  widget.product?.like = !(widget.product?.like ?? false);
+                  LocalStore.removeLikeList(widget.product?.id ?? 0);
+                  widget.onLikeInLikePage();
+                  setState(() {});
+                } else {
+                  widget.product?.like = !(widget.product?.like ?? false);
+                  LocalStore.setLikeList(widget.product?.id ?? 0);
+                  setState(() {});
+                }
+              },
+              icon: Icon(
+                (widget.product?.like ?? false)
+                    ? Icons.favorite
+                    : Icons.favorite_border,
+                color: Colors.red,
+              ),
+            )
           ],
         ),
       ),

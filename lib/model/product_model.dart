@@ -18,11 +18,13 @@ class ProductModel {
     this.category,
     this.image,
     this.rating,
+    required this.like
   });
 
   int? id;
   String? title;
   double? price;
+  bool like;
   String? description;
   String? category;
   String? image;
@@ -35,7 +37,7 @@ class ProductModel {
         description: json["description"],
         category: json["category"],
         image: json["image"],
-        rating: Rating.fromJson(json["rating"]),
+        rating: Rating.fromJson(json["rating"]), like: false,
       );
 
   Map<String, dynamic> toJson() => {

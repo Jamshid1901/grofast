@@ -12,7 +12,7 @@ abstract class GetInfo {
   static Future<List<ProductModel?>?> getProductByCategory(String categoryTitle) async {
     try {
       final url = Uri.parse("https://fakestoreapi.com/products/category/$categoryTitle");
-      final res = await http.get(url);
+      final res = await http.post(url,);
       return productModelFromJson(res.body);
     } catch (e) {
       print(e);
@@ -25,6 +25,18 @@ abstract class GetInfo {
       final url = Uri.parse("https://fakestoreapi.com/products");
       final res = await http.get(url);
       return productModelFromJson(res.body);
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+
+  static Future<ProductModel?> getSingleProduct(String productId) async {
+    try {
+      final url = Uri.parse("https://fakestoreapi.com/products/$productId");
+      final res = await http.get(url);
+      return ProductModel.fromJson(jsonDecode(res.body));
     } catch (e) {
       print(e);
     }
