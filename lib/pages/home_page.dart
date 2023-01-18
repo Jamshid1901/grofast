@@ -28,8 +28,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: ProsteIndexedStack(
         index: selectIndex,
-
-
+        // oybek code
 
         children: list,
       ),
