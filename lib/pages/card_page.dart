@@ -40,7 +40,7 @@ class _CardPageState extends State<CardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Like"),
+        title: const Text("Like"),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
