@@ -28,8 +28,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: ProsteIndexedStack(
         index: selectIndex,
-        // oybek code
-
         children: list,
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -37,14 +35,9 @@ class _HomePageState extends State<HomePage> {
         unselectedIconTheme: const IconThemeData(color: Style.greyColor),
         currentIndex: selectIndex,
         onTap: (value) {
-          selectIndex = value;
-          setState(() {});
         },
         type: BottomNavigationBarType.fixed,
         items: const [
-
-
-
           BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
           BottomNavigationBarItem(icon: Icon(Icons.group), label: ""),
           BottomNavigationBarItem(
